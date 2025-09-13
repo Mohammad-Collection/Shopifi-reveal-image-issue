@@ -1,0 +1,455 @@
+{% comment %}
+  Advanced Reveal Image Section with Premium Effects
+  Features:
+  - Enhanced 3D animations
+  - Particle effects
+  - Multiple reveal styles
+  - Advanced video integration
+{% endcomment %}
+
+{{ 'reveal-image-3d.css' | asset_url | stylesheet_tag }}
+{{ 'reveal-effects-premium.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign enable_3d = section.settings.enable_3d_effects | default: true
+  assign reveal_speed = section.settings.reveal_speed | default: 1.5
+  assign reveal_direction = section.settings.reveal_direction | default: 'left-to-right'
+  assign reveal_style = section.settings.reveal_style | default: 'standard'
+  assign enable_premium = section.settings.enable_premium_effects | default: false
+  assign enable_video = section.settings.enable_video_banner | default: true
+  assign video_url = section.settings.banner_video_url
+  assign video_title = section.settings.video_banner_title | default: 'Product Showcase Video'
+  assign video_description = section.settings.video_banner_description | default: 'Watch our product in action'
+  assign video_position = section.settings.video_position | default: 'right'
+  assign reveal_image = section.settings.reveal_image
+  assign reveal_image_alt = section.settings.reveal_image_alt | default: 'Product reveal image'
+  assign section_heading = section.settings.section_heading
+  assign section_description = section.settings.section_description
+-%}
+
+<script id="reveal-image-settings" type="application/json">
+{
+  "enable3D": {{ enable_3d | json }},
+  "revealSpeed": {{ reveal_speed | json }},
+  "revealDirection": {{ reveal_direction | json }},
+  "revealStyle": {{ reveal_style | json }},
+  "enablePremium": {{ enable_premium | json }},
+  "enableVideoBanner": {{ enable_video | json }},
+  "videoPosition": {{ video_position | json }}
+}
+</script>
+
+<section class="reveal-video-section-advanced video-{{ video_position }}" id="reveal-section-{{ section.id }}" 
+         style="background: {{ section.settings.section_background | default: 'transparent' }}; padding: {{ section.settings.section_padding_top | default: 50 }}px 0 {{ section.settings.section_padding_bottom | default: 50 }}px;">
+  
+  {% if section_heading != blank or section_description != blank %}
+    <div class="page-width">
+      <div class="section-header text-center">
+        {% if section_heading != blank %}
+          <h2 class="section-header__title text-reveal">
+            <span class="text-reveal-content">{{ section_heading }}</span>
+          </h2>
+        {% endif %}
+        {% if section_description != blank %}
+          <div class="section-header__description text-reveal rte">
+            <span class="text-reveal-content">{{ section_description }}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="page-width">
+    <div class="reveal-video-wrapper video-{{ video_position }}">
+      {% comment %} Advanced Reveal Image Container {% endcomment %}
+      <div class="reveal-image-container {{ reveal_style }} {% if enable_premium %}premium-effects{% endif %} {% if enable_3d %}enable-3d{% endif %}" 
+           data-reveal-direction="{{ reveal_direction }}"
+           data-reveal-style="{{ reveal_style }}"
+           data-enable-3d="{{ enable_3d }}"
+           data-enable-premium="{{ enable_premium }}"
+           role="img" 
+           aria-label="{{ reveal_image_alt }}">
+        
+        <div class="reveal-image-wrapper">
+          {% if reveal_image %}
+            <img 
+              class="reveal-image"
+              src="{{ reveal_image | image_url: width: 800 }}"
+              srcset="{{ reveal_image | image_url: width: 400 }} 400w,
+                      {{ reveal_image | image_url: width: 600 }} 600w,
+                      {{ reveal_image | image_url: width: 800 }} 800w,
+                      {{ reveal_image | image_url: width: 1000 }} 1000w,
+                      {{ reveal_image | image_url: width: 1200 }} 1200w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="{{ reveal_image_alt }}"
+              loading="lazy"
+              width="{{ reveal_image.width }}"
+              height="{{ reveal_image.height }}"
+            >
+          {% else %}
+            <div class="reveal-image-placeholder" style="width: 100%; height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; border-radius: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+              <div style="text-align: center;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" style="margin-bottom: 1rem; opacity: 0.8;">
+                  <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                </svg>
+                <div>Select an image to reveal</div>
+                <div style="font-size: 1rem; opacity: 0.7; margin-top: 0.5rem;">Upload in theme settings</div>
+              </div>
+            </div>
+          {% endif %}
+          
+          <div class="reveal-overlay {{ reveal_style }}" aria-hidden="true"></div>
+        </div>
+
+        {% if section.settings.enable_click_trigger %}
+          <button class="reveal-trigger-btn" style="position: absolute; bottom: 1rem; right: 1rem; background: rgba(255,255,255,0.9); border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            {{ 'reveal_image.trigger_button' | t | default: 'Reveal' }}
+          </button>
+        {% endif %}
+      </div>
+
+      {% comment %} Enhanced Video Banner Container {% endcomment %}
+      {% if enable_video and video_url != blank %}
+        <div class="video-banner-container {% if enable_premium %}premium-effects{% endif %}" 
+             role="region" 
+             aria-label="Video banner: {{ video_title }}"
+             tabindex="0">
+          
+          <div class="video-banner-wrapper">
+            {% assign video_id = video_url | split: '/' | last %}
+            {% assign video_type = 'mp4' %}
+            
+            {% if video_url contains 'youtube.com' or video_url contains 'youtu.be' %}
+              {% assign video_type = 'youtube' %}
+              {% if video_url contains 'youtu.be' %}
+                {% assign video_id = video_url | split: '/' | last %}
+              {% elsif video_url contains 'watch?v=' %}
+                {% assign video_id = video_url | split: 'v=' | last | split: '&' | first %}
+              {% endif %}
+            {% elsif video_url contains 'vimeo.com' %}
+              {% assign video_type = 'vimeo' %}
+              {% assign video_id = video_url | split: '/' | last %}
+            {% endif %}
+
+            <div class="video-banner">
+              {% case video_type %}
+                {% when 'youtube' %}
+                  <iframe 
+                    src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls={{ section.settings.video_controls | default: 0 }}&showinfo=0&rel=0&modestbranding=1"
+                    title="{{ video_title }}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                  </iframe>
+                
+                {% when 'vimeo' %}
+                  <iframe 
+                    src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1&loop=1&background=1&controls={{ section.settings.video_controls | default: 0 }}"
+                    title="{{ video_title }}"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen>
+                  </iframe>
+                
+                {% else %}
+                  <video 
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    {% if section.settings.video_controls %}controls{% endif %}
+                    preload="metadata"
+                    aria-label="{{ video_title }}">
+                    <source src="{{ video_url }}" type="video/mp4">
+                    <p>Your browser doesn't support HTML5 video. <a href="{{ video_url }}" target="_blank" rel="noopener">Download the video</a> instead.</p>
+                  </video>
+              {% endcase %}
+            </div>
+
+            {% if section.settings.video_overlay_text %}
+              <div class="video-overlay-badge" style="position: absolute; top: 1rem; left: 1rem; background: rgba(0,0,0,0.7); color: white; padding: 0.5rem 1rem; border-radius: 15px; font-size: 0.9rem; font-weight: bold;">
+                {{ section.settings.video_overlay_text }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if video_title != blank or video_description != blank %}
+            <div class="video-banner-content">
+              {% if video_title != blank %}
+                <h3 class="video-banner-title">{{ video_title }}</h3>
+              {% endif %}
+              {% if video_description != blank %}
+                <p class="video-banner-description">{{ video_description }}</p>
+              {% endif %}
+              {% if section.settings.video_cta_text != blank and section.settings.video_cta_url != blank %}
+                <a href="{{ section.settings.video_cta_url }}" class="video-cta-button button" style="margin-top: 1rem;">
+                  {{ section.settings.video_cta_text }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% elsif enable_video %}
+        <div class="video-banner-container video-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 300px; display: flex; align-items: center; justify-content: center; color: white; border-radius: 12px; text-align: center;">
+          <div>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" style="margin-bottom: 1rem; opacity: 0.8;">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Add Video URL</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">YouTube, Vimeo, or MP4 supported</div>
+            <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem;">Configure in theme settings</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'reveal-image-3d.js' | asset_url }}" defer></script>
+
+<style>
+  .reveal-video-section-advanced {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .reveal-video-wrapper {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  
+  .reveal-video-wrapper.video-left {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "video reveal";
+  }
+  
+  .reveal-video-wrapper.video-right {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "reveal video";
+  }
+  
+  .reveal-video-wrapper.video-top {
+    grid-template-columns: 1fr;
+    grid-template-areas: "video" "reveal";
+  }
+  
+  .reveal-video-wrapper.video-bottom {
+    grid-template-columns: 1fr;
+    grid-template-areas: "reveal" "video";
+  }
+  
+  .reveal-image-container {
+    grid-area: reveal;
+  }
+  
+  .video-banner-container {
+    grid-area: video;
+  }
+  
+  @media (max-width: 768px) {
+    .reveal-video-wrapper.video-left,
+    .reveal-video-wrapper.video-right {
+      grid-template-columns: 1fr;
+      grid-template-areas: "reveal" "video";
+    }
+    
+    .reveal-video-wrapper {
+      gap: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Advanced Reveal Image",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "Experience Our Products"
+    },
+    {
+      "type": "richtext",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "<p>Discover amazing features with stunning reveal animations</p>"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Section Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Reveal Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "reveal_image",
+      "label": "Reveal Image",
+      "info": "Choose the image to reveal with effects"
+    },
+    {
+      "type": "text",
+      "id": "reveal_image_alt",
+      "label": "Image Alt Text",
+      "default": "Product reveal image",
+      "info": "Describe the image for accessibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_3d_effects",
+      "label": "Enable 3D Effects",
+      "default": true,
+      "info": "Add 3D hover and tilt effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_premium_effects",
+      "label": "Enable Premium Effects",
+      "default": false,
+      "info": "Add advanced animations and particle effects"
+    },
+    {
+      "type": "range",
+      "id": "reveal_speed",
+      "min": 0.5,
+      "max": 3.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Reveal Animation Speed",
+      "default": 1.5
+    },
+    {
+      "type": "select",
+      "id": "reveal_direction",
+      "label": "Reveal Direction",
+      "options": [
+        {"value": "left-to-right", "label": "Left to Right"},
+        {"value": "right-to-left", "label": "Right to Left"},
+        {"value": "top-to-bottom", "label": "Top to Bottom"},
+        {"value": "bottom-to-top", "label": "Bottom to Top"},
+        {"value": "center-out", "label": "Center Out"}
+      ],
+      "default": "left-to-right"
+    },
+    {
+      "type": "select",
+      "id": "reveal_style",
+      "label": "Reveal Style",
+      "options": [
+        {"value": "standard", "label": "Standard"},
+        {"value": "liquid-morph", "label": "Liquid Morph"},
+        {"value": "split-reveal", "label": "Split Reveal"},
+        {"value": "ripple-effect", "label": "Ripple Effect"}
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_click_trigger",
+      "label": "Enable Click to Reveal",
+      "default": false,
+      "info": "Add a button to manually trigger reveal"
+    },
+    {
+      "type": "header",
+      "content": "Video Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_banner",
+      "label": "Enable Video Banner",
+      "default": true
+    },
+    {
+      "type": "video_url",
+      "id": "banner_video_url",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "YouTube, Vimeo, or direct MP4 URL"
+    },
+    {
+      "type": "text",
+      "id": "video_banner_title",
+      "label": "Video Title",
+      "default": "Product Showcase Video"
+    },
+    {
+      "type": "textarea",
+      "id": "video_banner_description",
+      "label": "Video Description",
+      "default": "Watch our product in action"
+    },
+    {
+      "type": "text",
+      "id": "video_overlay_text",
+      "label": "Video Overlay Badge",
+      "placeholder": "e.g., NEW, FEATURED, LIVE"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show Video Controls",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "video_cta_text",
+      "label": "Video CTA Button Text",
+      "placeholder": "e.g., Shop Now, Learn More"
+    },
+    {
+      "type": "url",
+      "id": "video_cta_url",
+      "label": "Video CTA Button URL"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video Position",
+      "options": [
+        {"value": "left", "label": "Left of Image"},
+        {"value": "right", "label": "Right of Image"},
+        {"value": "top", "label": "Above Image"},
+        {"value": "bottom", "label": "Below Image"}
+      ],
+      "default": "right"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Advanced Reveal Image"
+    }
+  ]
+}
+{% endschema %}
