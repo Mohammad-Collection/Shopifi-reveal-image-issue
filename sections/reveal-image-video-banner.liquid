@@ -1,0 +1,292 @@
+{% comment %}
+  Reveal Image with Video Banner Section
+  Features:
+  - 3D reveal animations
+  - Multiple reveal directions
+  - Video banner with customizable position
+  - Responsive design
+  - Accessibility support
+{% endcomment %}
+
+{{ 'reveal-image-3d.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign enable_3d = section.settings.enable_3d_effects | default: true
+  assign reveal_speed = section.settings.reveal_speed | default: 1.5
+  assign reveal_direction = section.settings.reveal_direction | default: 'left-to-right'
+  assign enable_video = section.settings.enable_video_banner | default: true
+  assign video_url = section.settings.banner_video_url
+  assign video_title = section.settings.video_banner_title | default: 'Product Showcase Video'
+  assign video_description = section.settings.video_banner_description | default: 'Watch our product in action'
+  assign video_position = section.settings.video_position | default: 'right'
+  assign reveal_image = section.settings.reveal_image
+  assign reveal_image_alt = section.settings.reveal_image_alt | default: 'Product reveal image'
+-%}
+
+<script id="reveal-image-settings" type="application/json">
+{
+  "enable3D": {{ enable_3d | json }},
+  "revealSpeed": {{ reveal_speed | json }},
+  "revealDirection": {{ reveal_direction | json }},
+  "enableVideoBanner": {{ enable_video | json }},
+  "videoPosition": {{ video_position | json }}
+}
+</script>
+
+<section class="reveal-video-section video-{{ video_position }}" id="reveal-section-{{ section.id }}">
+  {% comment %} Reveal Image Container {% endcomment %}
+  <div class="reveal-image-container" 
+       data-reveal-direction="{{ reveal_direction }}"
+       data-enable-3d="{{ enable_3d }}"
+       role="img" 
+       aria-label="{{ reveal_image_alt }}">
+    
+    <div class="reveal-image-wrapper">
+      {% if reveal_image %}
+        <img 
+          class="reveal-image"
+          src="{{ reveal_image | image_url: width: 800 }}"
+          srcset="{{ reveal_image | image_url: width: 400 }} 400w,
+                  {{ reveal_image | image_url: width: 600 }} 600w,
+                  {{ reveal_image | image_url: width: 800 }} 800w,
+                  {{ reveal_image | image_url: width: 1000 }} 1000w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="{{ reveal_image_alt }}"
+          loading="lazy"
+          width="{{ reveal_image.width }}"
+          height="{{ reveal_image.height }}"
+        >
+      {% else %}
+        <div class="reveal-image-placeholder" style="width: 100%; height: 400px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); display: flex; align-items: center; justify-content: center; color: #666; font-size: 1.2rem; border-radius: 8px;">
+          <div style="text-align: center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" style="margin-bottom: 1rem;">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+            <div>Select an image to reveal</div>
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="reveal-overlay" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  {% comment %} Video Banner Container {% endcomment %}
+  {% if enable_video and video_url != blank %}
+    <div class="video-banner-container" 
+         role="region" 
+         aria-label="Video banner: {{ video_title }}"
+         tabindex="0">
+      
+      <div class="video-banner-wrapper">
+        {% assign video_id = video_url | split: '/' | last %}
+        {% assign video_type = 'mp4' %}
+        
+        {% if video_url contains 'youtube.com' or video_url contains 'youtu.be' %}
+          {% assign video_type = 'youtube' %}
+          {% if video_url contains 'youtu.be' %}
+            {% assign video_id = video_url | split: '/' | last %}
+          {% elsif video_url contains 'watch?v=' %}
+            {% assign video_id = video_url | split: 'v=' | last | split: '&' | first %}
+          {% endif %}
+        {% elsif video_url contains 'vimeo.com' %}
+          {% assign video_type = 'vimeo' %}
+          {% assign video_id = video_url | split: '/' | last %}
+        {% endif %}
+
+        <div class="video-banner">
+          {% case video_type %}
+            {% when 'youtube' %}
+              <iframe 
+                src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&showinfo=0&rel=0&modestbranding=1"
+                title="{{ video_title }}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            
+            {% when 'vimeo' %}
+              <iframe 
+                src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1&loop=1&background=1&controls=0"
+                title="{{ video_title }}"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            
+            {% else %}
+              <video 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+                preload="metadata"
+                aria-label="{{ video_title }}">
+                <source src="{{ video_url }}" type="video/mp4">
+                <p>Your browser doesn't support HTML5 video. <a href="{{ video_url }}">Download the video</a> instead.</p>
+              </video>
+          {% endcase %}
+        </div>
+      </div>
+
+      {% if video_title != blank or video_description != blank %}
+        <div class="video-banner-content">
+          {% if video_title != blank %}
+            <h3 class="video-banner-title">{{ video_title }}</h3>
+          {% endif %}
+          {% if video_description != blank %}
+            <p class="video-banner-description">{{ video_description }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% elsif enable_video %}
+    <div class="video-banner-container video-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 300px; display: flex; align-items: center; justify-content: center; color: white; border-radius: 12px;">
+      <div style="text-align: center;">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" style="margin-bottom: 1rem;">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <div style="font-size: 1.2rem; font-weight: bold;">Add Video URL</div>
+        <div style="font-size: 0.9rem; opacity: 0.8;">YouTube, Vimeo, or MP4 supported</div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<script src="{{ 'reveal-image-3d.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Reveal Image with Video Banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Reveal Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "reveal_image",
+      "label": "Reveal Image",
+      "info": "Choose the image to reveal with 3D effects"
+    },
+    {
+      "type": "text",
+      "id": "reveal_image_alt",
+      "label": "Image Alt Text",
+      "default": "Product reveal image",
+      "info": "Describe the image for accessibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_3d_effects",
+      "label": "Enable 3D Effects",
+      "default": true,
+      "info": "Add 3D hover and tilt effects to the image"
+    },
+    {
+      "type": "range",
+      "id": "reveal_speed",
+      "min": 0.5,
+      "max": 3.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Reveal Animation Speed",
+      "default": 1.5,
+      "info": "How fast the reveal animation plays"
+    },
+    {
+      "type": "select",
+      "id": "reveal_direction",
+      "label": "Reveal Direction",
+      "options": [
+        {
+          "value": "left-to-right",
+          "label": "Left to Right"
+        },
+        {
+          "value": "right-to-left",
+          "label": "Right to Left"
+        },
+        {
+          "value": "top-to-bottom",
+          "label": "Top to Bottom"
+        },
+        {
+          "value": "bottom-to-top",
+          "label": "Bottom to Top"
+        },
+        {
+          "value": "center-out",
+          "label": "Center Out"
+        }
+      ],
+      "default": "left-to-right",
+      "info": "Direction of the reveal animation"
+    },
+    {
+      "type": "header",
+      "content": "Video Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_banner",
+      "label": "Enable Video Banner",
+      "default": true,
+      "info": "Show video banner alongside the reveal image"
+    },
+    {
+      "type": "video_url",
+      "id": "banner_video_url",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "YouTube, Vimeo, or direct MP4 URL"
+    },
+    {
+      "type": "text",
+      "id": "video_banner_title",
+      "label": "Video Title",
+      "default": "Product Showcase Video",
+      "info": "Title displayed on video hover"
+    },
+    {
+      "type": "textarea",
+      "id": "video_banner_description",
+      "label": "Video Description",
+      "default": "Watch our product in action",
+      "info": "Description displayed on video hover"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left of Image"
+        },
+        {
+          "value": "right",
+          "label": "Right of Image"
+        },
+        {
+          "value": "top",
+          "label": "Above Image"
+        },
+        {
+          "value": "bottom",
+          "label": "Below Image"
+        }
+      ],
+      "default": "right",
+      "info": "Where to position the video banner"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reveal Image with Video Banner"
+    }
+  ]
+}
+{% endschema %}

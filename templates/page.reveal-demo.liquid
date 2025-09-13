@@ -1,0 +1,115 @@
+{% comment %}
+  Demo page template showcasing the Reveal Image with Video Banner functionality
+{% endcomment %}
+
+<div class="page-width">
+  <header class="section-header text-center">
+    <h1 class="section-header__title">{{ page.title | default: "3D Reveal Image Demo" }}</h1>
+    {% if page.content != blank %}
+      <div class="section-header__description rte">
+        {{ page.content }}
+      </div>
+    {% endif %}
+  </header>
+</div>
+
+{% comment %} Showcase multiple reveal image sections {% endcomment %}
+<div class="reveal-demo-container">
+  
+  {% comment %} Section 1: Left to Right reveal with right video {% endcomment %}
+  {% section 'reveal-image-video-banner' %}
+  
+  {% comment %} Section 2: Alternative configuration showcase {% endcomment %}
+  <div class="page-width section-group">
+    <div class="section-header text-center">
+      <h2 class="section-header__title">Different Animation Styles</h2>
+      <p class="section-header__description">Experience various reveal animations and effects</p>
+    </div>
+  </div>
+  
+  {% comment %} Additional reveal sections would be added here via the theme editor {% endcomment %}
+  
+</div>
+
+<style>
+  .reveal-demo-container {
+    padding: 4rem 0;
+  }
+  
+  .section-header {
+    margin-bottom: 4rem;
+  }
+  
+  .section-header__title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .section-header__description {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .section-group {
+    margin: 6rem 0;
+  }
+  
+  .page-width {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .rte {
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 768px) {
+    .section-header__title {
+      font-size: 2rem;
+    }
+    
+    .page-width {
+      padding: 0 1rem;
+    }
+    
+    .reveal-demo-container {
+      padding: 2rem 0;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Reveal Image Demo Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page Settings"
+    },
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Custom Page Title",
+      "default": "3D Reveal Image Demo"
+    },
+    {
+      "type": "richtext",
+      "id": "page_description",
+      "label": "Page Description",
+      "default": "<p>Discover our powerful reveal image functionality with 3D effects and integrated video banners.</p>"
+    }
+  ]
+}
+{% endschema %}

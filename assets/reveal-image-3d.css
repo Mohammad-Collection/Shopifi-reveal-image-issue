@@ -1,0 +1,260 @@
+/* 3D Reveal Image Styles */
+.reveal-image-container {
+  position: relative;
+  overflow: hidden;
+  perspective: 1000px;
+  margin: 2rem 0;
+}
+
+.reveal-image-wrapper {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  transition: transform var(--reveal-speed, 1.5s) ease-in-out;
+}
+
+.reveal-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all var(--reveal-speed, 1.5s) ease-in-out;
+}
+
+.reveal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  transform-origin: center;
+  transition: all var(--reveal-speed, 1.5s) ease-in-out;
+  pointer-events: none;
+}
+
+/* Reveal Animation Directions */
+.reveal-left-to-right .reveal-overlay {
+  transform: translateX(-100%) skewX(-15deg);
+}
+
+.reveal-right-to-left .reveal-overlay {
+  transform: translateX(100%) skewX(15deg);
+}
+
+.reveal-top-to-bottom .reveal-overlay {
+  transform: translateY(-100%) skewY(-15deg);
+}
+
+.reveal-bottom-to-top .reveal-overlay {
+  transform: translateY(100%) skewY(15deg);
+}
+
+.reveal-center-out .reveal-overlay {
+  transform: scale(0) rotate(180deg);
+  border-radius: 50%;
+}
+
+/* Revealed state */
+.reveal-image-container.revealed .reveal-overlay {
+  transform: translateX(100%) skewX(-15deg);
+  opacity: 0;
+}
+
+.reveal-image-container.revealed.reveal-right-to-left .reveal-overlay {
+  transform: translateX(-100%) skewX(15deg);
+}
+
+.reveal-image-container.revealed.reveal-top-to-bottom .reveal-overlay {
+  transform: translateY(100%) skewY(-15deg);
+}
+
+.reveal-image-container.revealed.reveal-bottom-to-top .reveal-overlay {
+  transform: translateY(-100%) skewY(15deg);
+}
+
+.reveal-image-container.revealed.reveal-center-out .reveal-overlay {
+  transform: scale(3) rotate(360deg);
+}
+
+/* 3D Effects */
+.reveal-image-container.enable-3d:hover .reveal-image-wrapper {
+  transform: rotateY(5deg) rotateX(5deg) scale(1.05);
+}
+
+.reveal-image-container.enable-3d .reveal-image {
+  transform: translateZ(0);
+}
+
+/* Video Banner Styles */
+.video-banner-container {
+  position: relative;
+  margin: 2rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.video-banner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+}
+
+.video-banner iframe,
+.video-banner video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+}
+
+.video-banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: white;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.video-banner-container:hover .video-banner-content {
+  transform: translateY(0);
+}
+
+.video-banner-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.video-banner-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Layout Styles */
+.reveal-video-section {
+  display: grid;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reveal-video-section.video-left {
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "video reveal";
+}
+
+.reveal-video-section.video-right {
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "reveal video";
+}
+
+.reveal-video-section.video-top {
+  grid-template-columns: 1fr;
+  grid-template-areas: "video" "reveal";
+}
+
+.reveal-video-section.video-bottom {
+  grid-template-columns: 1fr;
+  grid-template-areas: "reveal" "video";
+}
+
+.reveal-image-container {
+  grid-area: reveal;
+}
+
+.video-banner-container {
+  grid-area: video;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reveal-video-section.video-left,
+  .reveal-video-section.video-right {
+    grid-template-columns: 1fr;
+    grid-template-areas: "reveal" "video";
+  }
+  
+  .reveal-video-section {
+    padding: 1rem;
+  }
+  
+  .video-banner-content {
+    padding: 1rem;
+  }
+  
+  .video-banner-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Loading Animation */
+.reveal-image-container.loading .reveal-overlay {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.9) 25%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    rgba(255, 255, 255, 0.9) 75%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Accessibility */
+.reveal-image-container:focus-within {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.video-banner-container:focus-within {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .reveal-overlay {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .video-banner-content {
+    background: rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-image-wrapper,
+  .reveal-overlay,
+  .reveal-image,
+  .video-banner-content {
+    transition: none;
+  }
+  
+  .reveal-image-container.enable-3d:hover .reveal-image-wrapper {
+    transform: none;
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "general": {
+    "accessibility": {
+      "refresh_page": "Choosing a selection results in a full page refresh.",
+      "link_messages": {
+        "new_window": "Opens in a new window."
+      },
+      "skip_to_text": "Skip to content"
+    },
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "404": {
+      "title": "404 Page Not Found",
+      "subtext_html": "The page you requested does not exist. Click <a href=\"{{ url }}\">here</a> to continue shopping."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "share": {
+      "success_message": "Link copied to clipboard"
+    }
+  },
+  "sections": {
+    "reveal_image": {
+      "loading": "Loading image...",
+      "revealed": "Image revealed",
+      "play_video": "Play video",
+      "pause_video": "Pause video",
+      "video_error": "Video could not be loaded"
+    },
+    "cart": {
+      "cart_error": "There was an error while updating your cart.",
+      "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart."
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "value_unavailable": "{{ option_value }} - Unavailable",
+      "media": {
+        "image_available": "Image {{ index }} is now available in gallery view"
+      }
+    }
+  },
+  "reveal_image": {
+    "settings": {
+      "enable_3d": "Enable 3D effects",
+      "reveal_speed": "Animation speed",
+      "reveal_direction": "Reveal direction",
+      "video_banner": "Video banner",
+      "video_position": "Video position"
+    },
+    "directions": {
+      "left_to_right": "Left to right",
+      "right_to_left": "Right to left", 
+      "top_to_bottom": "Top to bottom",
+      "bottom_to_top": "Bottom to top",
+      "center_out": "Center out"
+    },
+    "positions": {
+      "left": "Left of image",
+      "right": "Right of image",
+      "top": "Above image", 
+      "bottom": "Below image"
+    },
+    "video": {
+      "title": "Product showcase video",
+      "description": "Watch our product in action",
+      "loading": "Loading video...",
+      "error": "Video could not be loaded"
+    }
+  }
+}

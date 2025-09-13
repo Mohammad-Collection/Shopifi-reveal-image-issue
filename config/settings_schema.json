@@ -1,0 +1,120 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Shopify Reveal Image Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Mohammad Collection",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Reveal Image Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "3D Reveal Image Configuration"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_3d_effects",
+        "label": "Enable 3D Effects",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "reveal_speed",
+        "min": 0.5,
+        "max": 3.0,
+        "step": 0.1,
+        "unit": "s",
+        "label": "Reveal Animation Speed",
+        "default": 1.5
+      },
+      {
+        "type": "select",
+        "id": "reveal_direction",
+        "label": "Reveal Direction",
+        "options": [
+          {
+            "value": "left-to-right",
+            "label": "Left to Right"
+          },
+          {
+            "value": "right-to-left",
+            "label": "Right to Left"
+          },
+          {
+            "value": "top-to-bottom",
+            "label": "Top to Bottom"
+          },
+          {
+            "value": "bottom-to-top",
+            "label": "Bottom to Top"
+          },
+          {
+            "value": "center-out",
+            "label": "Center Out"
+          }
+        ],
+        "default": "left-to-right"
+      }
+    ]
+  },
+  {
+    "name": "Video Banner Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Video Banner Configuration"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_video_banner",
+        "label": "Enable Video Banner",
+        "default": true
+      },
+      {
+        "type": "video_url",
+        "id": "banner_video_url",
+        "label": "Banner Video URL",
+        "accept": ["youtube", "vimeo", "mp4"]
+      },
+      {
+        "type": "text",
+        "id": "video_banner_title",
+        "label": "Video Banner Title",
+        "default": "Product Showcase Video"
+      },
+      {
+        "type": "textarea",
+        "id": "video_banner_description",
+        "label": "Video Banner Description",
+        "default": "Watch our product in action"
+      },
+      {
+        "type": "select",
+        "id": "video_position",
+        "label": "Video Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left of Reveal Image"
+          },
+          {
+            "value": "right",
+            "label": "Right of Reveal Image"
+          },
+          {
+            "value": "top",
+            "label": "Above Reveal Image"
+          },
+          {
+            "value": "bottom",
+            "label": "Below Reveal Image"
+          }
+        ],
+        "default": "right"
+      }
+    ]
+  }
+]

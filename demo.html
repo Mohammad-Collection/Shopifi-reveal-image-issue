@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Reveal Image Demo</title>
+    <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/reveal-image-3d.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .demo-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-description {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            margin: 6rem 0;
+        }
+        
+        .demo-section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        /* Mock product image for demo */
+        .mock-product {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <header class="demo-header">
+            <h1 class="demo-title">3D Reveal Image Demo</h1>
+            <p class="demo-description">
+                Experience powerful reveal animations with 3D effects and integrated video banners. 
+                Scroll down to see the images reveal with stunning animations.
+            </p>
+        </header>
+
+        <!-- Demo Section 1: Left to Right Reveal with Right Video -->
+        <section class="demo-section">
+            <h2>Left to Right Reveal with Video Banner</h2>
+            <div class="reveal-video-section video-right">
+                <div class="reveal-image-container reveal-left-to-right enable-3d" data-reveal-direction="left-to-right">
+                    <div class="reveal-image-wrapper">
+                        <div class="reveal-image mock-product">
+                            🎨 Product Image
+                        </div>
+                        <div class="reveal-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="video-banner-container">
+                    <div class="video-banner-wrapper">
+                        <div class="video-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border-radius: 12px;">
+                            📹 Demo Video Player
+                        </div>
+                    </div>
+                    <div class="video-banner-content">
+                        <h3 class="video-banner-title">Product Showcase Video</h3>
+                        <p class="video-banner-description">Watch our product in action with detailed demonstrations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Section 2: Center Out Reveal with Top Video -->
+        <section class="demo-section">
+            <h2>Center Out Reveal with Top Video</h2>
+            <div class="reveal-video-section video-top">
+                <div class="video-banner-container">
+                    <div class="video-banner-wrapper">
+                        <div class="video-banner" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border-radius: 12px;">
+                            🎬 Feature Video
+                        </div>
+                    </div>
+                    <div class="video-banner-content">
+                        <h3 class="video-banner-title">Feature Highlights</h3>
+                        <p class="video-banner-description">Discover all the amazing features and benefits.</p>
+                    </div>
+                </div>
+
+                <div class="reveal-image-container reveal-center-out enable-3d" data-reveal-direction="center-out">
+                    <div class="reveal-image-wrapper">
+                        <div class="reveal-image mock-product">
+                            ⭐ Feature Image
+                        </div>
+                        <div class="reveal-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Section 3: Right to Left Reveal with Left Video -->
+        <section class="demo-section">
+            <h2>Right to Left Reveal with Left Video</h2>
+            <div class="reveal-video-section video-left">
+                <div class="video-banner-container">
+                    <div class="video-banner-wrapper">
+                        <div class="video-banner" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); height: 100%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 1.5rem; border-radius: 12px;">
+                            🎯 Tutorial Video
+                        </div>
+                    </div>
+                    <div class="video-banner-content">
+                        <h3 class="video-banner-title">How-to Tutorial</h3>
+                        <p class="video-banner-description">Learn how to use this product effectively.</p>
+                    </div>
+                </div>
+
+                <div class="reveal-image-container reveal-right-to-left enable-3d" data-reveal-direction="right-to-left">
+                    <div class="reveal-image-wrapper">
+                        <div class="reveal-image mock-product">
+                            🚀 Demo Image
+                        </div>
+                        <div class="reveal-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls Demo -->
+        <section class="demo-section">
+            <h2>Interactive Controls</h2>
+            <div style="text-align: center; margin: 2rem 0;">
+                <button class="button" onclick="revealAll()">Reveal All Images</button>
+                <button class="button" onclick="hideAll()" style="margin-left: 1rem;">Reset All</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Settings for JavaScript -->
+    <script id="reveal-image-settings" type="application/json">
+    {
+        "enable3D": true,
+        "revealSpeed": 1.5,
+        "revealDirection": "left-to-right",
+        "enableVideoBanner": true,
+        "videoPosition": "right"
+    }
+    </script>
+
+    <script src="assets/global.js"></script>
+    <script src="assets/reveal-image-3d.js"></script>
+    
+    <script>
+        // Demo control functions
+        function revealAll() {
+            if (window.revealImageManager) {
+                window.revealImageManager.revealAll();
+            }
+        }
+        
+        function hideAll() {
+            if (window.revealImageManager) {
+                window.revealImageManager.hideAll();
+            }
+        }
+        
+        // Add some demo interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading delay for demo
+            setTimeout(() => {
+                const containers = document.querySelectorAll('.reveal-image-container');
+                containers.forEach(container => {
+                    container.classList.remove('loading');
+                });
+            }, 1000);
+            
+            // Add click handlers for demo
+            document.querySelectorAll('.video-banner-container').forEach(banner => {
+                banner.addEventListener('click', function() {
+                    console.log('Video banner clicked!');
+                });
+            });
+        });
+        
+        // Listen for reveal events
+        document.addEventListener('imageRevealed', function(event) {
+            console.log('Image revealed:', event.detail.container);
+        });
+    </script>
+</body>
+</html>
