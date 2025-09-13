@@ -1,0 +1,293 @@
+{% comment %}
+  Product template with reveal image functionality
+{% endcomment %}
+
+<div class="product-page">
+  <div class="container">
+    <div class="product-grid">
+      <!-- Product Images with Reveal Functionality -->
+      <div class="product-media">
+        {%- if product.media.size > 0 -%}
+          <div class="reveal-image-container product-reveal" 
+               data-animation="{{ settings.reveal_animation | default: 'flip' }}"
+               data-speed="{{ settings.reveal_speed | default: 800 }}"
+               data-enable-3d="{{ settings.enable_3d_effects | default: true }}"
+               role="button"
+               tabindex="0"
+               aria-label="Click to reveal product details">
+            
+            {%- if settings.reveal_animation == 'flip' -%}
+              <div class="reveal-card">
+                <div class="reveal-image-front">
+                  <img src="{{ product.featured_media | image_url: width: 800 }}"
+                       alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                       width="{{ product.featured_media.width }}"
+                       height="{{ product.featured_media.height }}"
+                       loading="eager">
+                  
+                  <div class="reveal-overlay">
+                    <div class="reveal-overlay-content">
+                      <h3>{{ product.title }}</h3>
+                      <p>Click to see more details</p>
+                      <button class="button">Reveal Details</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="reveal-image-back">
+                  {%- if product.media[1] -%}
+                    <img src="{{ product.media[1] | image_url: width: 800 }}"
+                         alt="{{ product.media[1].alt | escape | default: product.title }}"
+                         width="{{ product.media[1].width }}"
+                         height="{{ product.media[1].height }}"
+                         loading="lazy">
+                  {%- else -%}
+                    <img src="{{ product.featured_media | image_url: width: 800 }}"
+                         alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                         loading="lazy">
+                  {%- endif -%}
+                  
+                  <div class="reveal-overlay">
+                    <div class="reveal-overlay-content">
+                      <h3>{{ product.price | money }}</h3>
+                      <p>{{ product.description | strip_html | truncate: 100 }}</p>
+                      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                        <button type="submit" class="button">Add to Cart</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              <!-- Non-flip animations -->
+              <div class="reveal-image-front">
+                <img src="{{ product.featured_media | image_url: width: 800 }}"
+                     alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                     loading="eager">
+                
+                <div class="reveal-overlay">
+                  <div class="reveal-overlay-content">
+                    <h3>{{ product.title }}</h3>
+                    <p>Click to see more details</p>
+                    <button class="button">Reveal Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reveal-image-back">
+                {%- if product.media[1] -%}
+                  <img src="{{ product.media[1] | image_url: width: 800 }}"
+                       alt="{{ product.media[1].alt | escape | default: product.title }}"
+                       loading="lazy">
+                {%- endif -%}
+                
+                <div class="reveal-overlay">
+                  <div class="reveal-overlay-content">
+                    <h3>{{ product.price | money }}</h3>
+                    <p>{{ product.description | strip_html | truncate: 100 }}</p>
+                    <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                      <button type="submit" class="button">Add to Cart</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <!-- Additional Product Images -->
+          {%- if product.media.size > 2 -%}
+            <div class="product-thumbnails">
+              {%- for media in product.media limit: 6 -%}
+                <button class="thumbnail-button" data-media-id="{{ media.id }}">
+                  <img src="{{ media | image_url: width: 100 }}"
+                       alt="{{ media.alt | escape | default: product.title }}"
+                       loading="lazy">
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      <!-- Product Information -->
+      <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        
+        <div class="product-price">
+          <span class="price">{{ product.price | money }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="compare-price">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+
+        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form">
+          {%- unless product.has_only_default_variant -%}
+            <div class="product-variants">
+              {%- for option in product.options_with_values -%}
+                <div class="variant-option">
+                  <label for="Option-{{ forloop.index }}">{{ option.name }}</label>
+                  <select name="options[{{ option.name | escape }}]" id="Option-{{ forloop.index }}">
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}" {%- if option.selected_value == value -%}selected="selected"{%- endif -%}>
+                        {{ value }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <div class="product-quantity">
+            <label for="Quantity">Quantity</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1">
+          </div>
+
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          
+          <button type="submit" class="button button--large product-add-button" {%- if product.selected_or_first_available_variant.available == false -%}disabled{%- endif -%}>
+            {%- if product.selected_or_first_available_variant.available -%}
+              Add to Cart
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-page {
+    padding: 4rem 0;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .product-media {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .product-reveal {
+    margin-bottom: 2rem;
+  }
+
+  .product-thumbnails {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .thumbnail-button {
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+
+  .thumbnail-button:hover,
+  .thumbnail-button.active {
+    border-color: var(--color-accent);
+  }
+
+  .thumbnail-button img {
+    border-radius: 0.3rem;
+  }
+
+  .product-info {
+    padding: 2rem 0;
+  }
+
+  .product-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .product-price {
+    margin-bottom: 2rem;
+  }
+
+  .price {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: var(--color-accent);
+  }
+
+  .compare-price {
+    font-size: 1.8rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 1rem;
+  }
+
+  .product-description {
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .product-form .variant-option {
+    margin-bottom: 1.5rem;
+  }
+
+  .product-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .product-form select,
+  .product-form input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    font-size: 1.4rem;
+  }
+
+  .product-quantity {
+    margin-bottom: 2rem;
+  }
+
+  .product-quantity input {
+    width: 8rem;
+  }
+
+  .product-add-button {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .product-add-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  @media screen and (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .product-media {
+      position: static;
+    }
+    
+    .product-title {
+      font-size: 2.4rem;
+    }
+  }
+</style>

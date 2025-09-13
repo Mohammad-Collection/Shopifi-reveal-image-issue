@@ -1,0 +1,147 @@
+<header class="header" role="banner">
+  <div class="container">
+    <div class="header-wrapper">
+      <div class="header-logo">
+        {%- if settings.logo != blank -%}
+          <a href="{{ routes.root_url }}" class="logo-link">
+            <img src="{{ settings.logo | image_url: width: 200 }}"
+                 alt="{{ shop.name | escape }}"
+                 width="{{ settings.logo.width }}"
+                 height="{{ settings.logo.height }}"
+                 loading="eager">
+          </a>
+        {%- else -%}
+          <a href="{{ routes.root_url }}" class="logo-text">
+            <h1>{{ shop.name }}</h1>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <nav class="header-nav" role="navigation">
+        <ul class="nav-list">
+          {%- for link in linklists.main-menu.links -%}
+            <li class="nav-item">
+              <a href="{{ link.url }}" class="nav-link">
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="{{ routes.search_url }}" class="header-action" aria-label="Search">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </a>
+        
+        <a href="{{ routes.cart_url }}" class="header-action cart-link" aria-label="Cart">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 18.1 16.1 19 15 19H9C7.9 19 7 18.1 7 17V13H17Z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span class="cart-count">{{ cart.item_count }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-secondary);
+    border-bottom: 1px solid rgba(var(--color-primary), 0.1);
+    padding: 1rem 0;
+  }
+
+  .header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .header-logo .logo-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .header-logo .logo-text h1 {
+    font-size: 2.4rem;
+    margin: 0;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .header-nav .nav-list {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .header-action {
+    position: relative;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .header-action:hover {
+    color: var(--color-accent);
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  @media screen and (max-width: 768px) {
+    .header-nav {
+      display: none;
+    }
+    
+    .header-wrapper {
+      gap: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}
