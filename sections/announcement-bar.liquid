@@ -1,0 +1,75 @@
+{%- if section.settings.show_announcement -%}
+  <div class="announcement-bar" role="banner">
+    <div class="container">
+      <div class="announcement-content">
+        {%- if section.settings.announcement_link != blank -%}
+          <a href="{{ section.settings.announcement_link }}" class="announcement-link">
+        {%- endif -%}
+        
+        <p class="announcement-text">
+          {{ section.settings.announcement_text | default: 'Welcome to our store with revolutionary reveal image technology!' }}
+        </p>
+        
+        {%- if section.settings.announcement_link != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<style>
+  .announcement-bar {
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  .announcement-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .announcement-link {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+
+  .announcement-link:hover {
+    opacity: 0.8;
+  }
+
+  .announcement-text {
+    margin: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "Welcome to our store with revolutionary reveal image technology!"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement Link"
+    }
+  ]
+}
+{% endschema %}

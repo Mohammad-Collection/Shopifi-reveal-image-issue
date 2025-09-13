@@ -1,0 +1,337 @@
+{% comment %}
+  Collection template with reveal image grid
+{% endcomment %}
+
+<div class="collection-page">
+  <div class="container">
+    <div class="collection-header">
+      <h1 class="collection-title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="collection-description">
+          {{ collection.description }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if collection.products.size > 0 -%}
+      <div class="collection-grid">
+        {%- for product in collection.products -%}
+          <div class="product-card">
+            <div class="reveal-image-container product-card-reveal" 
+                 data-animation="{{ settings.reveal_animation | default: 'flip' }}"
+                 data-speed="{{ settings.reveal_speed | default: 800 }}"
+                 data-enable-3d="{{ settings.enable_3d_effects | default: true }}"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Click to reveal {{ product.title }} details">
+              
+              {%- if settings.reveal_animation == 'flip' -%}
+                <div class="reveal-card">
+                  <div class="reveal-image-front">
+                    {%- if product.featured_media -%}
+                      <img src="{{ product.featured_media | image_url: width: 400 }}"
+                           alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                           width="{{ product.featured_media.width }}"
+                           height="{{ product.featured_media.height }}"
+                           loading="lazy">
+                    {%- else -%}
+                      <div class="placeholder-image">
+                        <svg width="100%" height="100%" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="100%" height="100%" fill="#f8f9fa"/>
+                          <text x="50%" y="50%" text-anchor="middle" fill="#6c757d" font-size="18">{{ product.title }}</text>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                    
+                    <div class="reveal-overlay">
+                      <div class="reveal-overlay-content">
+                        <h3>{{ product.title }}</h3>
+                        <p>{{ product.price | money }}</p>
+                        <button class="button">View Product</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="reveal-image-back">
+                    {%- if product.media[1] -%}
+                      <img src="{{ product.media[1] | image_url: width: 400 }}"
+                           alt="{{ product.media[1].alt | escape | default: product.title }}"
+                           loading="lazy">
+                    {%- elsif product.featured_media -%}
+                      <img src="{{ product.featured_media | image_url: width: 400 }}"
+                           alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                           loading="lazy"
+                           style="filter: sepia(20%) saturate(120%);">
+                    {%- endif -%}
+                    
+                    <div class="reveal-overlay">
+                      <div class="reveal-overlay-content">
+                        <h3>{{ product.title }}</h3>
+                        <p>{{ product.description | strip_html | truncate: 80 }}</p>
+                        <div class="product-actions">
+                          <a href="{{ product.url }}" class="button button--secondary">View Details</a>
+                          <form action="{{ routes.cart_add_url }}" method="post" style="display: inline;">
+                            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                            <button type="submit" class="button" {%- if product.selected_or_first_available_variant.available == false -%}disabled{%- endif -%}>
+                              {%- if product.selected_or_first_available_variant.available -%}
+                                Add to Cart
+                              {%- else -%}
+                                Sold Out
+                              {%- endif -%}
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- else -%}
+                <!-- Non-flip animations -->
+                <div class="reveal-image-front">
+                  {%- if product.featured_media -%}
+                    <img src="{{ product.featured_media | image_url: width: 400 }}"
+                         alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                         loading="lazy">
+                  {%- endif -%}
+                  
+                  <div class="reveal-overlay">
+                    <div class="reveal-overlay-content">
+                      <h3>{{ product.title }}</h3>
+                      <p>{{ product.price | money }}</p>
+                      <button class="button">View Product</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="reveal-image-back">
+                  {%- if product.media[1] -%}
+                    <img src="{{ product.media[1] | image_url: width: 400 }}"
+                         alt="{{ product.media[1].alt | escape | default: product.title }}"
+                         loading="lazy">
+                  {%- endif -%}
+                  
+                  <div class="reveal-overlay">
+                    <div class="reveal-overlay-content">
+                      <h3>{{ product.title }}</h3>
+                      <p>{{ product.description | strip_html | truncate: 80 }}</p>
+                      <div class="product-actions">
+                        <a href="{{ product.url }}" class="button button--secondary">View Details</a>
+                        <form action="{{ routes.cart_add_url }}" method="post" style="display: inline;">
+                          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                          <button type="submit" class="button">Add to Cart</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="product-card-info">
+              <h3 class="product-card-title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              <div class="product-card-price">
+                <span class="price">{{ product.price | money }}</span>
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="compare-price">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="pagination-item pagination-item--prev">
+              Previous
+            </a>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="pagination-item">{{ part.title }}</a>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <span class="pagination-item pagination-item--current">{{ part.title }}</span>
+              {%- else -%}
+                <span class="pagination-item">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="pagination-item pagination-item--next">
+              Next
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <div class="collection-empty">
+        <h2>No products found</h2>
+        <p>This collection is empty.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="button">Browse All Products</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .collection-page {
+    padding: 4rem 0;
+  }
+
+  .collection-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .collection-title {
+    font-size: 3.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .collection-description {
+    font-size: 1.6rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.8;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .product-card:hover {
+    transform: translateY(-0.3rem);
+    box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.15);
+  }
+
+  .product-card-reveal {
+    height: 300px;
+  }
+
+  .product-card-info {
+    padding: 1.5rem;
+  }
+
+  .product-card-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card-title a {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+
+  .product-card-title a:hover {
+    color: var(--color-accent);
+  }
+
+  .product-card-price .price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-accent);
+  }
+
+  .product-card-price .compare-price {
+    font-size: 1.4rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .product-actions .button {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 4rem;
+  }
+
+  .pagination-item {
+    padding: 0.8rem 1.2rem;
+    text-decoration: none;
+    color: var(--color-primary);
+    border: 1px solid #ddd;
+    border-radius: 0.4rem;
+    transition: all 0.3s;
+  }
+
+  .pagination-item:hover {
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    border-color: var(--color-accent);
+  }
+
+  .pagination-item--current {
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    border-color: var(--color-accent);
+  }
+
+  .collection-empty {
+    text-align: center;
+    padding: 4rem 0;
+  }
+
+  .collection-empty h2 {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+  }
+
+  @media screen and (max-width: 768px) {
+    .collection-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    
+    .collection-title {
+      font-size: 2.8rem;
+    }
+    
+    .product-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{%- paginate collection.products by 12 -%}
+  <!-- Pagination wrapper -->
+{%- endpaginate -%}

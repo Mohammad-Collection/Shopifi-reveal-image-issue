@@ -1,0 +1,395 @@
+{{ 'reveal-image.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign reveal_animation = section.settings.reveal_animation | default: settings.reveal_animation | default: 'flip'
+  assign reveal_speed = section.settings.reveal_speed | default: settings.reveal_speed | default: 800
+  assign enable_3d = section.settings.enable_3d_effects | default: settings.enable_3d_effects | default: true
+  assign enable_video = section.settings.enable_video_banner | default: settings.enable_video_banner | default: true
+-%}
+
+<section class="reveal-image-section section" id="reveal-section-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-header text-center">
+        <h2 class="section-title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="section-subtitle">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="reveal-image-grid">
+      <!-- Reveal Image Component -->
+      <div class="reveal-image-container" 
+           data-animation="{{ reveal_animation }}"
+           data-speed="{{ reveal_speed }}"
+           data-enable-3d="{{ enable_3d }}"
+           data-auto-hide="{{ section.settings.auto_hide }}"
+           {% if section.settings.auto_reveal_delay %}data-auto-reveal-delay="{{ section.settings.auto_reveal_delay }}"{% endif %}
+           role="button"
+           tabindex="0"
+           aria-label="Click to reveal image">
+        
+        {%- if reveal_animation == 'flip' -%}
+          <div class="reveal-card">
+            <div class="reveal-image-front">
+              {%- if section.settings.front_image != blank -%}
+                {%- assign front_image = section.settings.front_image -%}
+                <img src="{{ front_image | image_url: width: 800 }}"
+                     alt="{{ front_image.alt | escape | default: section.settings.front_image_alt }}"
+                     width="{{ front_image.width }}"
+                     height="{{ front_image.height }}"
+                     loading="lazy">
+              {%- else -%}
+                <div class="placeholder-image">
+                  <svg width="100%" height="100%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100%" height="100%" fill="#f8f9fa"/>
+                    <text x="50%" y="50%" text-anchor="middle" fill="#6c757d" font-size="24">Front Image</text>
+                  </svg>
+                </div>
+              {%- endif -%}
+              
+              <div class="reveal-overlay">
+                <div class="reveal-overlay-content">
+                  <h3>{{ section.settings.front_title | default: 'Discover More' }}</h3>
+                  <p>{{ section.settings.front_description | default: 'Click to reveal the hidden image' }}</p>
+                  <button class="button">{{ section.settings.front_button_text | default: 'Reveal' }}</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="reveal-image-back">
+              {%- if section.settings.back_image != blank -%}
+                {%- assign back_image = section.settings.back_image -%}
+                <img src="{{ back_image | image_url: width: 800 }}"
+                     alt="{{ back_image.alt | escape | default: section.settings.back_image_alt }}"
+                     width="{{ back_image.width }}"
+                     height="{{ back_image.height }}"
+                     loading="lazy">
+              {%- else -%}
+                <div class="placeholder-image">
+                  <svg width="100%" height="100%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100%" height="100%" fill="#e9ecef"/>
+                    <text x="50%" y="50%" text-anchor="middle" fill="#6c757d" font-size="24">Back Image</text>
+                  </svg>
+                </div>
+              {%- endif -%}
+              
+              <div class="reveal-overlay">
+                <div class="reveal-overlay-content">
+                  <h3>{{ section.settings.back_title | default: 'Revealed!' }}</h3>
+                  <p>{{ section.settings.back_description | default: 'You found the hidden content' }}</p>
+                  {%- if section.settings.back_button_text != blank and section.settings.back_button_url != blank -%}
+                    <a href="{{ section.settings.back_button_url }}" class="button">
+                      {{ section.settings.back_button_text }}
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- else -%}
+          <!-- Non-flip animations -->
+          <div class="reveal-image-front">
+            {%- if section.settings.front_image != blank -%}
+              {%- assign front_image = section.settings.front_image -%}
+              <img src="{{ front_image | image_url: width: 800 }}"
+                   alt="{{ front_image.alt | escape | default: section.settings.front_image_alt }}"
+                   width="{{ front_image.width }}"
+                   height="{{ front_image.height }}"
+                   loading="lazy">
+            {%- endif -%}
+            
+            <div class="reveal-overlay">
+              <div class="reveal-overlay-content">
+                <h3>{{ section.settings.front_title | default: 'Discover More' }}</h3>
+                <p>{{ section.settings.front_description | default: 'Click to reveal the hidden image' }}</p>
+                <button class="button">{{ section.settings.front_button_text | default: 'Reveal' }}</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal-image-back">
+            {%- if section.settings.back_image != blank -%}
+              {%- assign back_image = section.settings.back_image -%}
+              <img src="{{ back_image | image_url: width: 800 }}"
+                   alt="{{ back_image.alt | escape | default: section.settings.back_image_alt }}"
+                   width="{{ back_image.width }}"
+                   height="{{ back_image.height }}"
+                   loading="lazy">
+            {%- endif -%}
+            
+            <div class="reveal-overlay">
+              <div class="reveal-overlay-content">
+                <h3>{{ section.settings.back_title | default: 'Revealed!' }}</h3>
+                <p>{{ section.settings.back_description | default: 'You found the hidden content' }}</p>
+                {%- if section.settings.back_button_text != blank and section.settings.back_button_url != blank -%}
+                  <a href="{{ section.settings.back_button_url }}" class="button">
+                    {{ section.settings.back_button_text }}
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Video Banner Component -->
+      {%- if enable_video -%}
+        <div class="video-banner-container">
+          {%- if section.settings.video_url != blank -%}
+            <video class="video-banner"
+                   {% if section.settings.video_autoplay %}autoplay{% endif %}
+                   {% if section.settings.video_muted %}muted{% endif %}
+                   loop
+                   playsinline
+                   {% if section.settings.video_poster %}poster="{{ section.settings.video_poster | image_url: width: 800 }}"{% endif %}>
+              <source src="{{ section.settings.video_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {%- elsif section.settings.video_poster != blank -%}
+            {%- assign video_poster = section.settings.video_poster -%}
+            <img src="{{ video_poster | image_url: width: 800 }}"
+                 alt="{{ video_poster.alt | escape | default: 'Video preview' }}"
+                 class="video-banner"
+                 width="{{ video_poster.width }}"
+                 height="{{ video_poster.height }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="placeholder-image video-banner">
+              <svg width="100%" height="100%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#212529"/>
+                <circle cx="400" cy="300" r="60" fill="rgba(255,255,255,0.8)"/>
+                <polygon points="380,280 380,320 420,300" fill="#212529"/>
+                <text x="50%" y="380" text-anchor="middle" fill="white" font-size="18">Video Banner</text>
+              </svg>
+            </div>
+          {%- endif -%}
+          
+          <div class="video-banner-overlay">
+            <button class="video-play-button" aria-label="Play video"></button>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #reveal-section-{{ section.id }} {
+    --reveal-animation-speed: {{ reveal_speed }}ms;
+  }
+  
+  {%- if section.settings.background_color != blank -%}
+    #reveal-section-{{ section.id }} {
+      background-color: {{ section.settings.background_color }};
+    }
+  {%- endif -%}
+  
+  {%- if section.settings.text_color != blank -%}
+    #reveal-section-{{ section.id }} {
+      color: {{ section.settings.text_color }};
+    }
+  {%- endif -%}
+</style>
+
+{% schema %}
+{
+  "name": "Reveal Image",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Interactive Reveal Gallery"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Section Subheading",
+      "default": "Discover hidden content with stunning 3D effects"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color"
+    },
+    {
+      "type": "header",
+      "content": "Front Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "front_image",
+      "label": "Front Image"
+    },
+    {
+      "type": "text",
+      "id": "front_image_alt",
+      "label": "Front Image Alt Text"
+    },
+    {
+      "type": "text",
+      "id": "front_title",
+      "label": "Front Overlay Title",
+      "default": "Discover More"
+    },
+    {
+      "type": "textarea",
+      "id": "front_description",
+      "label": "Front Overlay Description",
+      "default": "Click to reveal the hidden image"
+    },
+    {
+      "type": "text",
+      "id": "front_button_text",
+      "label": "Front Button Text",
+      "default": "Reveal"
+    },
+    {
+      "type": "header",
+      "content": "Back Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Back Image"
+    },
+    {
+      "type": "text",
+      "id": "back_image_alt",
+      "label": "Back Image Alt Text"
+    },
+    {
+      "type": "text",
+      "id": "back_title",
+      "label": "Back Overlay Title",
+      "default": "Revealed!"
+    },
+    {
+      "type": "textarea",
+      "id": "back_description",
+      "label": "Back Overlay Description",
+      "default": "You found the hidden content"
+    },
+    {
+      "type": "text",
+      "id": "back_button_text",
+      "label": "Back Button Text"
+    },
+    {
+      "type": "url",
+      "id": "back_button_url",
+      "label": "Back Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "select",
+      "id": "reveal_animation",
+      "label": "Reveal Animation",
+      "options": [
+        {
+          "value": "flip",
+          "label": "3D Flip"
+        },
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "zoom",
+          "label": "Zoom"
+        }
+      ],
+      "default": "flip"
+    },
+    {
+      "type": "range",
+      "id": "reveal_speed",
+      "label": "Animation Speed (ms)",
+      "min": 200,
+      "max": 2000,
+      "step": 100,
+      "default": 800
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_3d_effects",
+      "label": "Enable 3D Effects",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_hide",
+      "label": "Auto Hide on Mouse Leave",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "auto_reveal_delay",
+      "label": "Auto Reveal Delay (ms)",
+      "min": 0,
+      "max": 5000,
+      "step": 500,
+      "default": 0,
+      "info": "Set to 0 to disable auto reveal"
+    },
+    {
+      "type": "header",
+      "content": "Video Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_banner",
+      "label": "Enable Video Banner",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (MP4)",
+      "info": "Upload video to Files section and paste URL here"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay Video",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_muted",
+      "label": "Mute Video",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reveal Image"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,112 @@
+{% comment %}
+  Cart drawer for quick cart functionality
+{% endcomment %}
+
+<div class="cart-drawer" id="cart-drawer" role="dialog" aria-labelledby="cart-drawer-heading" aria-hidden="true">
+  <div class="cart-drawer-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer-content">
+    <div class="cart-drawer-header">
+      <h2 id="cart-drawer-heading">Shopping Cart</h2>
+      <button class="cart-drawer-close" aria-label="Close cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-drawer-body">
+      <div class="cart-items" id="cart-items">
+        <!-- Cart items will be loaded here -->
+      </div>
+    </div>
+    
+    <div class="cart-drawer-footer">
+      <div class="cart-total">
+        <span>Total: <span id="cart-total">{{ cart.total_price | money }}</span></span>
+      </div>
+      <button class="button cart-checkout-btn">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .cart-drawer.open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .cart-drawer-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .cart-drawer-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 400px;
+    max-width: 90vw;
+    background: var(--color-secondary);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+  }
+
+  .cart-drawer.open .cart-drawer-content {
+    transform: translateX(0);
+  }
+
+  .cart-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cart-drawer-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .cart-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+
+  .cart-drawer-footer {
+    padding: 2rem;
+    border-top: 1px solid #eee;
+  }
+
+  .cart-total {
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
+
+  .cart-checkout-btn {
+    width: 100%;
+  }
+</style>

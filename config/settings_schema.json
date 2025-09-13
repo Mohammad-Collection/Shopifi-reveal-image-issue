@@ -1,0 +1,124 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Reveal Image Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Mohammad Collection",
+    "theme_documentation_url": "https://github.com/Mohammad-Collection/Shopifi-reveal-image-issue",
+    "theme_support_url": "https://github.com/Mohammad-Collection/Shopifi-reveal-image-issue/issues"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Color scheme"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary color",
+        "default": "#121212"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent color",
+        "default": "#FF6B35"
+      }
+    ]
+  },
+  {
+    "name": "Reveal Image Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Reveal Image Configuration"
+      },
+      {
+        "type": "select",
+        "id": "reveal_animation",
+        "label": "Reveal Animation Type",
+        "options": [
+          {
+            "value": "slide",
+            "label": "Slide"
+          },
+          {
+            "value": "fade",
+            "label": "Fade"
+          },
+          {
+            "value": "zoom",
+            "label": "Zoom"
+          },
+          {
+            "value": "flip",
+            "label": "3D Flip"
+          }
+        ],
+        "default": "flip"
+      },
+      {
+        "type": "range",
+        "id": "reveal_speed",
+        "label": "Animation Speed (ms)",
+        "min": 200,
+        "max": 2000,
+        "step": 100,
+        "default": 800
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_3d_effects",
+        "label": "Enable 3D Effects",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Video Banner Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Video Banner Configuration"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_video_banner",
+        "label": "Enable Video Banner",
+        "default": true
+      },
+      {
+        "type": "url",
+        "id": "video_banner_url",
+        "label": "Video URL (MP4)",
+        "info": "Upload video to Files section and paste URL here"
+      },
+      {
+        "type": "image_picker",
+        "id": "video_banner_poster",
+        "label": "Video Poster Image",
+        "info": "Fallback image shown before video loads"
+      },
+      {
+        "type": "checkbox",
+        "id": "video_autoplay",
+        "label": "Autoplay Video",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "video_muted",
+        "label": "Mute Video",
+        "default": true
+      }
+    ]
+  }
+]
